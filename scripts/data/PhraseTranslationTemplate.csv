@@ -1,0 +1,115 @@
+en category,en text,en sound,creole text,creole sound,fr text,fr sound,image
+medical,Do you have pain,have pain.mp3,Eske ou ap soufri?,have pain_ht.mp3,Ça te fait mal?,have pain_fr.mp3,have pain.png
+medical,Where is the pain?,,Ki kote ou gen mal?,,Où est la douleur ?
+logistical,Are there there other people here who need help?,,Genyen lot moun la ki bezwen ed?,,y-a-til des autres ici qui ont besoin d’aide ?
+logistical,Where are the others,,Ki kote lot moun yo?,,Où sont des autres?
+category,medical,medical.mp3,medikal,medical_ht.mp3,Medical,medical_fr.mp3,medical.png
+medical,Fever?,fever.mp3,Lafyév?,fever_ht.mp3,Fievre,"fever_fr.mp3
+",fever.png
+medical,Had any illnesses recently?,,éske ou te genyen yon maladi dényéman?,,Est-que tu etais recemment malade? 
+medical,Are you having any shortness of breath?,,éske souf ou kout?,,As tu des problèmes avec la respiration ?
+,Are you still there?,,éske ou la toujou?,,allo? tu es toujours la?
+medical,Call an ambulance,,Rele yon anbilans,,Appelle une ambulance 
+medical,Can you show me on a scale from one to ten how intense or strong is this pain that you're having?,,"éske ou kapab di m ki nivo doulé ou genyen oswa ki entansite doulé e dis vle di doulé a tré, tré fo?",,Est-ce que tu es capable de me decrire l'intensite de ta douleur sur une echelle allant d'un a dix?
+medical,Can you show me?,,éske ou kapab montre mwen?,,Montre-moi
+medical,Chest pain,,Doulé pwatrin
+medical,When was the last time you had water?,,Kile denye fwa ou te bwe dlo a?,,C’est quand la dernière fois que tu as bu de l’eau ?
+medical,When was the last time you had food?,,kile denye fwa ou te manje?,,C’est quand la dernière fois que tu as mangé ?
+,How old are you,,Ki laj ou?,,Quel age as-tu?
+,What is your name?,,Kijan ou rele,,Comment t’appelés tu ?
+,My name is ,,Mwen rele....,,Je m'appelle
+medical,How long have you had this problem?,,Kombyen tan eske ou gen pwoblem sa a?,,Depuis combien de temps as-tu eu ce probleme?
+medical,Do you have diabetes?,,éske ou gen dyabét?
+medical ,Do you have high blood pressure?,,éske ou fé tansyon?,,as-tu la hypertension?
+medical,Are you bleeding?,,Eske ou gen san?
+medical,Lie down,,,,Couchez-vous
+medical,Sit down/ Sit up straight,,Chita/ Chita Dwat,,Asseyez-vous
+medical,Are you vomiting?,,Eske ou ap vomi?,,as-tu vomi récemment?
+medical,Are you pregnant,,Eske ou ansant?,,Etes-vous enceinte ?
+medical,Take this medication,,Manje medikaman sa a,,Prends ce medicament
+category,Family Members,family members.mp3,,family members_ht.mp3,,family members_fr.mp3,family members.png
+Family Members,Mom,,manman/manmi,,Mère
+Family Members,Dad,,papa/papi,,Père
+Family Members,Sister,,se,,Sœur
+Family Members,Brother,,fre,,Frère
+Family Members,Grandmother,,granme,,Grande-mère
+Family Members,Grandfather,,granpe,,Grand-père
+Family Members,Aunt ,,matant,,Tante
+Family Members,Uncle,,tonton,,Oncle
+Family Members,Cousin,,kouzen/kouzin,,Cousin(e)
+Family Members,Niece,,Nyes,,Niece
+Family Members,Nephew,,neve,,Neveu
+Family Members,step (mom) - feminine,,bel-me,,"Belle-(Mère)
+"
+Family Members,Step (dad) - masculin,,bope,,Beau-(Père)
+category,Quantities,Quantities.mp3,Kantite,Quantities_ht.mp3,,Quantities_fr.mp3,Quantities.png
+Quantities,Small,,"Ti, pitit",,petit (e)
+Quantities,Large,,gran,,grand(e)
+Quantities,Many ,,anpil,,Beaucoup
+Quantities,Few,,"kek, pa anpil",,Peu
+Quantities,block (city),,,,Cadre
+Quantities,one,,yon/youn,,Un
+Quantities,two ,,de,,Deux
+Quantities,three,,twa,,Trois
+Quantities,four,,kat,,Quatre
+Quantities,five,,senk,,Cinq
+Quantities,six,,sis,,Six
+Quantities,seven,,set,,Sept
+Quantities,eight,,uit,,Huit
+Quantities,nine,,nef,,Neuf
+Quantities,ten,,dis,,Dix
+Quantities,eleven,,onz,,Onze
+Quantities,twelve,,douz,,Douze 
+Quantities,thirteen,,tres,,Treize
+Quantities,fourteen,,katoz,,Qutorze
+Quantities,fifteen,,kenz,,Quinze
+Quantities,sixteen,,sez,,Seize
+Quantities,seventeen,,diset,,Dix-sept
+Quantities,eighteen,,dizuit,,Dix-huit
+Quantities,nineteen,,diznef,,Dix-neuf
+Quantities,twenty,,ven,,Vingt
+Quantities,thrty,,trant,,Trente
+Quantities,forty,,karant,,Quarante
+Quantities,fifty,,senkant,,Cinquante
+Quantities,sixty,,swasant,,Soixante
+Quantities,seventy,,swasandis,,Soixante-dix
+Quantities,eighty,,katreven,,Quatre-vingt
+Quantities,ninety,,katrevendis,,Quatre vingt dix
+Quantities,one hundred,,san,,cent
+Quantities,one thousand,,mil,,mille
+category,Time,Time.mp3,,Time_ht.mp3,,Time_fr.mp3,Time.png
+Time,one o'clock,,,,une heure
+Time,two o'clock,,,,deux heure
+Time,three o'clock,,,,deux heures
+Time,four o'clock,,,,quatre heures
+Time,five o'clock,,,,cinq heures
+Time,six o'clock,,,,six heures
+Time,seven o'clock,,,,sept heures
+Time,eight o'clock,,,,huit heures
+Time,nine o'clock,,,,neuf heures
+Time,ten o'clock,,,,dix heures
+Time,eleven o'clock,,,,onze heures
+Time,twelve o'clock,,,,douze heures
+category,Location,Location.mp3,,Location_ht.mp3,,Location_fr.mp3,Location.png
+Location,in front,,devan,,devant
+Location,behind,,deye,,derriere
+Location,inside,,andann,,"dedans, dans"
+Location,near,,pre,,pres de
+Location,right,,dwat,,droit
+Location,left,,goch,,gauche
+Location,go forward,,avanse,,Avancez
+Location,below,,anba,,en bas
+Location,above,,anle,,en l'air
+Transport,what floor?,,ki etaj?,,Quelle etage?
+Transport,outside,,deyo,,dehors
+category,Transport,Transport.mp3,,Transport_ht.mp3,,Transport_fr.mp3,Transport.png
+Transport,plane,,avion
+Transport,boat,,bateau
+Transport,helicopter
+Transport,car,,machin,,voiture
+Transport,car
+Transport,taxi
+Transport,bus
+Transport,bridge
+Transport,airport
+Transport,dock

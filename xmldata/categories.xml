@@ -1,0 +1,22 @@
+<categorylist>
+<category categoryId="1" img="cat1.jpg">
+	<cattrans language="English" audio="cat1_en.aiff">Health</cattrans>
+	<cattrans language="Hatian" audio="cat1_ht.aiff">HealthHaiti</cattrans>
+	<cattrans language="French" audio="cat1_fr.aiff">HealthFrench</cattrans>
+</category>
+<category categoryId="2" img="cat2.jpg">
+	<cattrans language="English" audio="cat2_en.aiff">Food</cattrans>
+	<cattrans language="Hatian" audio="cat2_ht.aiff">FoodHaiti</cattrans>
+	<cattrans language="French" audio="cat2_fr.aiff">FoodFrench</cattrans>
+</category>
+<category categoryId="3" img="cat3.jpg">
+	<cattrans language="English" audio="cat3_en.aiff">Transportation</cattrans>
+	<cattrans language="Hatian" audio="cat3_ht.aiff">TransportationHaiti</cattrans>
+	<cattrans language="French" audio="cat3_fr.aiff">TransportationFrench</cattrans>
+</category>
+<category categoryId="4" img="cat4.jpg">
+	<cattrans language="English" audio="cat4_en.aiff">Other</cattrans>
+	<cattrans language="Hatian" audio="cat4_ht.aiff">OtherHaiti</cattrans>
+	<cattrans language="French" audio="cat4_fr.aiff">OtherFrench</cattrans>
+</category>
+</categorylist>

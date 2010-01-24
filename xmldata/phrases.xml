@@ -1,0 +1,17 @@
+<phraselist>
+<phrase phraseId="1" categoryId="1" img="phrase1img.jpg">
+	<phrasetrans language="English" audio="phrase1_en.aiff">Hello</phrasetrans>
+	<phrasetrans language="French" audio="phrase1_fr.aiff">Bonjour</phrasetrans>
+	<phrasetrans language="Hatian" audio="phrase1_ht.aiff">HaitiHello</phrasetrans>
+</phrase>
+<phrase phraseId="2" categoryId="1" img="phrase2img.jpg">
+	<phrasetrans language="English" audio="phrase2_en.aiff">Stop</phrasetrans>
+	<phrasetrans language="French" audio="phrase2_fr.aiff">StopFr</phrasetrans>
+	<phrasetrans language="Hatian" audio="phrase2_ht.aiff">HaitiStop</phrasetrans>
+</phrase>
+<phrase phraseId="3" categoryId="3" img="phrase3img.jpg">
+	<phrasetrans language="English" audio="phrase3_en.aiff">Foobar</phrasetrans>
+	<phrasetrans language="French" audio="phrase3_fr.aiff">FoobarFr</phrasetrans>
+	<phrasetrans language="Hatian" audio="phrase3_ht.aiff">HaitiFooBar</phrasetrans>
+</phrase>
+</phraselist>
