@@ -29,22 +29,27 @@ var Tradui = {
 	version:1.0,
 	db:'',
 
-	initialize: function() {
+	initialize: function(successCallback, failureCallback) {
+
+		if (!TiWrap.isActive) {
+			return false;
+		}
 
 		Tradui.Database.openDb();
 
-		var status;
-
-		try {
-			status = Tradui.Database.Query.getTraduiStatus();
-		} catch (e) {
-
+		var initializeSuccess = function(result) {
+			successCallback(result);
 		}
+
+		var initializeFailure = function(err) {
+			Tradui.Database.Management.updateDatabase(successCallback, failureCallback);
+		}
+
+		Tradui.Database.Query.getTraduiStatus(initializeSuccess, initializeFailure);
 		
-		if (!status || !status.lastUpdated) {
-			Tradui.Database.Management.updateDatabase();
-		}
 	},
+
+
 	
 	Database: {
 	
@@ -94,47 +99,47 @@ var Tradui = {
 		
 		Management: {
 			initDb: function() {
-				db.execute(Tradui.Database.Schema.Drop.traduiStatusTable);
-				db.execute(Tradui.Database.Schema.Create.traduiStatusTable);
+				db.execSql(Tradui.Database.Schema.Drop.traduiStatusTable);
+				db.execSql(Tradui.Database.Schema.Create.traduiStatusTable);
 
-				db.execute(Tradui.Database.Schema.Drop.categoriesTable);
-				db.execute(Tradui.Database.Schema.Drop.categoryTranslationsTable);
-				db.execute(Tradui.Database.Schema.Drop.phrasesTable);
-				db.execute(Tradui.Database.Schema.Drop.phraseTranslationsTable);
-				db.execute(Tradui.Database.Schema.Drop.dictionaryTable);
+				db.execSql(Tradui.Database.Schema.Drop.categoriesTable);
+				db.execSql(Tradui.Database.Schema.Drop.categoryTranslationsTable);
+				db.execSql(Tradui.Database.Schema.Drop.phrasesTable);
+				db.execSql(Tradui.Database.Schema.Drop.phraseTranslationsTable);
+				db.execSql(Tradui.Database.Schema.Drop.dictionaryTable);
 
-				db.execute(Tradui.Database.Schema.Create.categoriesTable);
-				db.execute(Tradui.Database.Schema.Create.categoryTranslationsTable);
-				db.execute(Tradui.Database.Schema.Create.phrasesTable);
-				db.execute(Tradui.Database.Schema.Create.phraseTranslationsTable);
-				db.execute(Tradui.Database.Schema.Create.dictionaryTable);
+				db.execSql(Tradui.Database.Schema.Create.categoriesTable);
+				db.execSql(Tradui.Database.Schema.Create.categoryTranslationsTable);
+				db.execSql(Tradui.Database.Schema.Create.phrasesTable);
+				db.execSql(Tradui.Database.Schema.Create.phraseTranslationsTable);
+				db.execSql(Tradui.Database.Schema.Create.dictionaryTable);
 
-				db.execute(Tradui.Database.Schema.Indexes.categoriesIdx);
-				db.execute(Tradui.Database.Schema.Indexes.categoryTranslationsIdx);
-				db.execute(Tradui.Database.Schema.Indexes.phrasesIdx);
-				db.execute(Tradui.Database.Schema.Indexes.phrasesIdx2);
-				db.execute(Tradui.Database.Schema.Indexes.phraseTranslationsIdx);
-				db.execute(Tradui.Database.Schema.Indexes.dictionaryIdx);
+				db.execSql(Tradui.Database.Schema.Indexes.categoriesIdx);
+				db.execSql(Tradui.Database.Schema.Indexes.categoryTranslationsIdx);
+				db.execSql(Tradui.Database.Schema.Indexes.phrasesIdx);
+				db.execSql(Tradui.Database.Schema.Indexes.phrasesIdx2);
+				db.execSql(Tradui.Database.Schema.Indexes.phraseTranslationsIdx);
+				db.execSql(Tradui.Database.Schema.Indexes.dictionaryIdx);
 			
 				var timestamp = new Date();
-				db.execute('insert into Tradui_Status values (?)', [ timestamp.getTime() ]);
+				db.execSql('insert into Tradui_Status values (?)', [ timestamp.getTime() ]);
 			},
 			
 			updateDatabase: function() {
-				db.execute('BEGIN');
+				db.execSql('BEGIN');
 				this.initDb();
 				this.loadCategories();
 				this.loadPhrases();
 				this.loadDictionary();
-				db.execute('COMMIT');
+				db.execSql('COMMIT');
 			},
 			
 			insertCategory: function(catId, catPic) {
-				db.execute('insert into Categories values (?,?)', [ catId, catPic ]);
+				db.execSql('insert into Categories values (?,?)', [ catId, catPic ]);
 			},
 			
 			insertCategoryTranslation: function(catId, language, title, audioFile) {
-				db.execute('insert into Category_Translations values (?,?,?,?)',
+				db.execSql('insert into Category_Translations values (?,?,?,?)',
 						[catId, language, title, audioFile]);
 			},	
 			
@@ -163,11 +168,11 @@ var Tradui = {
 			},
 			
 			insertPhrase: function(catId, phraseId, phrasePic) {
-				db.execute('insert into Phrases values (?,?,?)', [ catId, phraseId, phrasePic ]);
+				db.execSql('insert into Phrases values (?,?,?)', [ catId, phraseId, phrasePic ]);
 			},
 			
 			insertPhraseTranslation: function(phraseId, language, text, audioFile) {
-				db.execute('insert into Phrase_Translations values (?,?,?,?)',
+				db.execSql('insert into Phrase_Translations values (?,?,?,?)',
 						[phraseId, language, text, audioFile]);
 			},
 			
@@ -197,7 +202,7 @@ var Tradui = {
 			},
 
 			insertDictionaryWord: function(source, dest, sourceLang, destLang) {
-				db.execute('insert into Dictionary values (?,?,?,?)',
+				db.execSql('insert into Dictionary values (?,?,?,?)',
 						[source, dest, sourceLang, destLang]);
 			},
 
@@ -238,119 +243,65 @@ var Tradui = {
 		
 		
 		Query: {
-			getTraduiStatus: function() {
+			getTraduiStatus: function(success, failure) {
 				var sql = "select * from Tradui_Status";
-				var rs = db.execute(sql);
-				var status = new Object();
-				if (rs.isValidRow()) {
-					status.lastUpdated = rs.fieldByName('lastUpdated');
-				}
-				rs.close();
-				return status;
+				db.selectSql(sql, [], function(result) {
+						if (result) success(result[0]);
+						else failure;
+					}, failure);
 			},
 			
-			getLanguages: function() {
+			getLanguages: function(success, failure) {
 				var sql = "select distinct language from Category_Translations";
-				var rs = db.execute(sql);
-				var languages = new Array();
-				var languageIndex=0;
-				while (rs.isValidRow()) {
-					var language = rs.fieldByName('language');
-					languages[languageIndex++] = language;
-					rs.next();
-				}
-				rs.close();
-				return languages;
+				db.selectSql(sql, [], function(result) {
+						if (result) {
+							for (var i=0; i<result.length; i++) {
+								result[i] = result[i].language;
+							}
+						}
+						success(result); }, failure);
 			},
 			
-			getCategoryCount: function(categoryId) {
+			getCategoryCount: function(categoryId, success, failure) {
 				var sql = "select count(*) from Phrases where categoryId=?";
-				var rs = db.execute(sql, [ categoryId ]);
-				var count;
-				while (rs.isValidRow()) {
-					var count = rs.field(0);
-					rs.next();
-				}
-				rs.close();
-				return count;
+				var rs = db.selectSql(sql, [ categoryId ], success, failure);
 			},
 			
-			getCategories: function(language) {
+			getCategories: function(language, success, failure) {
 				var sql = "select c.*, ct.* from Categories c, Category_Translations ct " +
 						"where c.categoryId=ct.categoryId and ct.language=? " +
 						"order by ct.title ";
-				var rs = db.execute(sql, [ language ]);
-				var categories = new Array();
-				var categoryIndex = 0;
-				while (rs.isValidRow()) {
-					var categoryId = rs.fieldByName('categoryId');
-					var category = new Object();
-					category.categoryId = categoryId;
-					category.title = rs.fieldByName('title');
-					category.audioFile = rs.fieldByName('audioFile');
-					category.count = this.getCategoryCount(categoryId);
-					categories[categoryIndex++] = category;
-					rs.next();
-				}
-				rs.close();
-				return categories;
+				var rs = db.selectSql(sql, [ language ], success, failure);
 			},
 			
-			getPhrases: function(language, categoryId) {
+			getPhrases: function(language, categoryId, success, failure) {
 				var sql = "select p.*, pt.* from Phrases p, Phrase_Translations pt " + 
 						"where p.categoryId=? and p.phraseId=pt.phraseId and pt.language=? " +
 						"order by pt.text ";
-				var rs = db.execute(sql, [ categoryId, language ]);
-				var phrases = new Array();
-				var phraseIndex = 0;
-				while (rs.isValidRow()) {
-					var phrase = new Object();
-					phrase.phraseId = rs.fieldByName('phraseId');
-					phrase.text = rs.fieldByName('text');
-					phrase.audioFile = rs.fieldByName('audioFile');
-					phrases[phraseIndex++] = phrase;
-					rs.next();
-				}
-				rs.close();
-				return phrases;
+				db.selectSql(sql, [ categoryId, language ], success, failure);
 			},
 			
-			getPhraseDetails: function(language, phraseId) {
+			getPhraseDetails: function(language, phraseId, success, failure) {
 				var sql = "select p.*, pt.* from Phrases p, Phrase_Translations pt " + 
 						"where p.phraseId=? and p.phraseId=pt.phraseId and pt.language!=? " +
 						"order by pt.language";
-				var rs = db.execute(sql, [ phraseId, language ]);
+				db.selectSql(sql, [ phraseId, language ], success, failure);
 				var phraseDetails = new Array();
-				var phraseDetailsIndex = 0;
-				while (rs.isValidRow()) {
-					var phrase = new Object();
-					phrase.text = rs.fieldByName('text');
-					phrase.language = rs.fieldByName('language');
-					phrase.audioFile = rs.fieldByName('audioFile');
-					phraseDetails[phraseDetailsIndex++] = phrase;
-					rs.next();
-				}
-				rs.close();
-				return phraseDetails;
 			},
 
-			searchDictionary: function(word, sourceLang, destLang) {
+			//
+			// Dictionary Retrieval Functions
+			//
+			getDictionary: function(word, sourceLang, destLang, success, failure) {
+				var sql = "select * from Dictionary where sourceWord=? and sourceLang=? " +
+						" and destLang=? ";
+				db.selectSql(sql, [ word, sourceLang, destLang ], success, failure);
+			},
+
+			searchDictionary: function(word, sourceLang, destLang, success, failure) {
 				var sql = "select * from Dictionary where sourceWord like ? and sourceLang=? " +
 						" and destLang=? ";
-				var rs = db.execute(sql, [ word + "%", sourceLang, destLang ]);
-				var matchWords = new Array();
-				var matchWordsIdx = 0;
-				while (rs.isValidRow()) {
-					var dictionaryEntry = new Object();
-					dictionaryEntry.sourceWord = rs.fieldByName('sourceWord');
-					dictionaryEntry.destWord = rs.fieldByName('destWord');
-					dictionaryEntry.sourceLang = rs.fieldByName('sourceLang');
-					dictionaryEntry.destLang = rs.fieldByName('destLang');
-					matchWords[matchWordsIdx++] = dictionaryEntry;
-					rs.next();
-				}
-				rs.close();
-				return matchWords;
+				db.selectSql(sql, [ word + "%", sourceLang, destLang ], success, failure);
 			}
 
 		}

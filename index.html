@@ -16,41 +16,54 @@
 //
 
 function showLanguages() {
-	var languages = Tradui.Database.Query.getLanguages();
 
-	var htmlBlock = "<select id='language' name='language' onChange='return showCategories();'>";
-	htmlBlock += "<option value=''>Select Language..</option>";
-	for ( var i=0; i<languages.length; ++i ){
-		htmlBlock += "<option>" + languages[i] + "</option>";
+	var languageSuccess = function(languages) {
+		var htmlBlock = "<select id='language' name='language' onChange='return showCategories();'>";
+		htmlBlock += "<option value=''>Select Language..</option>";
+		for ( var i=0; i<languages.length; ++i ){
+			htmlBlock += "<option>" + languages[i] + "</option>";
+		}
+		htmlBlock += "</select>";
+
+		document.getElementById('languageList').innerHTML = htmlBlock;
+		document.getElementById('categoryList').innerHTML = '';
+		document.getElementById('phraseList').innerHTML = '';
+		document.getElementById('phraseDetails').innerHTML = '';
 	}
-	htmlBlock += "</select>";
 
-	document.getElementById('languageList').innerHTML = htmlBlock;
-	document.getElementById('categoryList').innerHTML = '';
-	document.getElementById('phraseList').innerHTML = '';
-	document.getElementById('phraseDetails').innerHTML = '';
+	var languageFail = function(e) { 
+		document.getElementById('languageList').innerHTML = 'Unable to load languages.';
+	}
+		
+	Tradui.Database.Query.getLanguages(languageSuccess, languageFail);
 }
 
 function showCategories() {
+
 	var language = document.getElementById('language').value;
+	if (language=="") {
+		return;
+	}
 
-	if (language!="") {
-		var categories = Tradui.Database.Query.getCategories(language);
-
+	var categoriesSuccess = function(categories) {
 		var htmlBlock = "<select id='category' name='category' onChange='return showPhrases();'>";
 		htmlBlock += "<option value=''>Select Category..</option>";
 		for ( var i=0, len=categories.length; i<len; ++i ){
 			htmlBlock += "<option value='" + 
 				categories[i].categoryId + "'>" + 
-				categories[i].title + " <i>(" + 
-				categories[i].count + ")</i> </option>";
+				categories[i].title + "</option>";
 		}
 		htmlBlock += "</select>";
 
 		document.getElementById('categoryList').innerHTML = htmlBlock;
-	} else {
-		document.getElementById('categoryList').innerHTML = '';
 	}
+
+	var categoriesFailure = function(e) {
+		document.getElementById('categoryList').innerHTML = "Unable to load Categories.";
+	}
+
+	Tradui.Database.Query.getCategories(language, categoriesSuccess, categoriesFailure);
+
 	document.getElementById('phraseList').innerHTML = '';
 	document.getElementById('phraseDetails').innerHTML = '';
 }
@@ -59,9 +72,11 @@ function showPhrases() {
 	var language = document.getElementById('language').value;
 	var category = document.getElementById('category').value;
 
-	if (language!="" && category!="") {
-		var phrases = Tradui.Database.Query.getPhrases(language, category);
+	if (language=="" || category=="") {
+		return;
+	}
 
+	var phraseSuccess = function(phrases) {
 		var htmlBlock = "<select id='phrase' name='phrase' onChange='return showPhraseDetails();'>";
 		htmlBlock += "<option value=''>Select Phrase..</option>";
 		for ( var i=0, len=phrases.length; i<len; ++i ){
@@ -72,9 +87,14 @@ function showPhrases() {
 		htmlBlock += "</select>";
 
 		document.getElementById('phraseList').innerHTML = htmlBlock;
-	} else {
-		document.getElementById('phraseList').innerHTML = '';
 	}
+
+	var phraseFailure = function(e) {
+		document.getElementById('phraseList').innerHTML = 'Unable to load Phrases';
+	}
+
+	Tradui.Database.Query.getPhrases(language, category, phraseSuccess, phraseFailure);
+
 	document.getElementById('phraseDetails').innerHTML = '';
 }
 
@@ -82,9 +102,11 @@ function showPhraseDetails() {
 	var language = document.getElementById('language').value;
 	var phrase = document.getElementById('phrase').value;
 
-	if (language!="" && phrase!="") {
-		var phraseDetails = Tradui.Database.Query.getPhraseDetails(language, phrase);
+	if (language=="" || phrase=="") {
+		return;
+	}
 
+	var pdSuccess = function(phraseDetails) {
 		var htmlBlock = "<ul>";
 		for ( var i=0, len=phraseDetails.length; i<len; ++i ){
 			htmlBlock += "<li>" + phraseDetails[i].text + " (" + phraseDetails[i].language + ") (" +
@@ -93,44 +115,62 @@ function showPhraseDetails() {
 		htmlBlock += "</ul>";
 
 		document.getElementById('phraseDetails').innerHTML = htmlBlock;
-	} else {
-		document.getElementById('phraseDetails').innerHTML = '';
 	}
+
+	var pdFailure = function(e) {
+		document.getElementById('phraseDetails').innerHTML = 'Unable to load Phrase Details.';
+	}
+
+	Tradui.Database.Query.getPhraseDetails(language, phrase, pdSuccess, pdFailure);
 
 }
 
 function searchDictionaryCreole() {
 	var searchWord = document.getElementById('searchWordCreole').value;
-	var words = Tradui.Database.Query.searchDictionary(searchWord, 'Creole', 'English');
 
-	var htmlBlock = "<ul>";
-	for ( var i=0, len=words.length; i<len; ++i ){
-		htmlBlock += "<li>" + words[i].sourceWord + "/" + words[i].destWord+ "</li>";
-	}
-	htmlBlock += "</ul>";
+	var searchSuccess = function(words) {
+		var htmlBlock = "<ul>";
+		for ( var i=0, len=words.length; i<len; ++i ){
+			htmlBlock += "<li>" + words[i].sourceWord + "/" + words[i].destWord+ "</li>";
+		}
+		htmlBlock += "</ul>";
 	
-	document.getElementById('dictLookupCreole').innerHTML = htmlBlock;
+		document.getElementById('dictLookupCreole').innerHTML = htmlBlock;
+	}
+
+	var searchFailure = function(e) {
+		document.getElementById('dictLookupCreole').innerHTML = 'Unable to search Dictionary.';
+	}
+
+	Tradui.Database.Query.searchDictionary(searchWord, 'Creole', 'English', searchSuccess, searchFailure);
 	
 	return false;
 }
 
 function searchDictionaryEnglish() {
 	var searchWord = document.getElementById('searchWordEnglish').value;
-	var words = Tradui.Database.Query.searchDictionary(searchWord, 'English', 'Creole');
 
-	var htmlBlock = "<ul>";
-	for ( var i=0, len=words.length; i<len; ++i ){
-		htmlBlock += "<li>" + words[i].sourceWord + "/" + words[i].destWord+ "</li>";
+	var searchSuccess = function(words) {
+		var htmlBlock = "<ul>";
+		for ( var i=0, len=words.length; i<len; ++i ){
+			htmlBlock += "<li>" + words[i].sourceWord + "/" + words[i].destWord+ "</li>";
+		}
+		htmlBlock += "</ul>";
+	
+		document.getElementById('dictLookupEnglish').innerHTML = htmlBlock;
 	}
-	htmlBlock += "</ul>";
+
+	var searchFailure = function(e) {
+		document.getElementById('dictLookupEnglish').innerHTML = 'Unable to search Dictionary.';
+	}
 	
-	document.getElementById('dictLookupEnglish').innerHTML = htmlBlock;
-	
+	Tradui.Database.Query.searchDictionary(searchWord, 'English', 'Creole', searchSuccess, searchFailure);
+
 	return false;
 }
 
 function performUpdate() {
-	var html = "Data update from " + Tradui.Database.categoriesDataUrl + 
+	var html = "Data update from " + Tradui.Database.categoryDataUrl + 
 				" and " + Tradui.Database.phraseDataUrl + ".";
 	document.getElementById('loadStatus').innerHTML = html;
 	Tradui.Database.Management.updateDatabase();
@@ -139,11 +179,22 @@ function performUpdate() {
 
 $(document).ready(function()
 {
-	Tradui.initialize();
-	var status = Tradui.Database.Query.getTraduiStatus();
-	var lastUpdated = new Date(status.lastUpdated);
-	document.getElementById('loadStatus').innerHTML = "Last Updated: " + lastUpdated.toLocaleString();
-	showLanguages();
+	function initializeComplete() {
+		var updatePage = function(status) {
+			var lastUpdated = new Date(status.lastUpdated);
+			document.getElementById('loadStatus').innerHTML = "Last Updated: " + lastUpdated.toLocaleString();
+			showLanguages();
+		};
+
+		Tradui.Database.Query.getTraduiStatus(updatePage);
+	};
+
+	function initializeFailure(e) {
+		window.location="not_supported.html";
+	}
+
+	Tradui.initialize(initializeComplete, initializeFailure);
+
 });
 
 </script>
@@ -160,20 +211,22 @@ $(document).ready(function()
 </div>
 
 <div style="margin: 25px; padding: 15px; border: 1px solid black;">
-	<form onsubmit="return searchDictionaryEnglish();">
+	<form onsubmit="return false;">
 		<input name="searchWordEnglish" id="searchWordEnglish" value=""/>
-		<button >Lookup English Word</button>
+		<button onClick="searchDictionaryEnglish();">Lookup English Word</button>
 	</form>
 
 	<div id="dictLookupEnglish"></div>
 
-	<form onsubmit="return searchDictionaryCreole();">
+	<form onsubmit="return false;">
 		<input name="searchWordCreole" id="searchWordCreole" value=""/>
-		<button >Lookup Creole Word</button>
+		<button onClick="searchDictionaryCreole();">Lookup Creole Word</button>
 	</form>
 
 	<div id="dictLookupCreole"></div>
 </div>
+
+<div id="log"> </div>
 
 </body>
 </html>
