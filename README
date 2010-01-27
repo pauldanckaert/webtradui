@@ -1,3 +1,10 @@
 
-This is a test tree and supporting library for Tradui
+This is a test tree and supporting library for Tradui.
+
+This now works with Firefox/Google Gears, Safari 4, and Google Chrome.  The last two are supported via HTML5 Web Databases, while the first of course is via Gears.  The index file contained here provides a simple example of using the underlying library, but is not a critical component here.  Note that the library is now async for all operations with the database, using callbacks to provide values as needed.
+
+Please feel free to send requests for information and comments.
+
+Paul Danckaert (pauld@lemur.org)
+
 
