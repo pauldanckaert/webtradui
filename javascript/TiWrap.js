@@ -1,3 +1,4 @@
+
 /**
  * TiWrap is a set of wrapping objects for Titanium that allow running, testing, and
  * debugging in the browser using normal tools/IDEs like Firebug and Aptana.
@@ -6,6 +7,7 @@
  * the standard Titanium mobile of code/launch/trace/guess.
  * 
  * @author David Rees
+ * @updates Paul Danckaert (pauld@lemur.org)
  */
 
 var TiWrap;
@@ -213,7 +215,7 @@ else if (TiWrap_verifyGears()) {
 							var resultIdx = 0;
 							while (rs.isValidRow()) {
 								var item = { };
-								for (var i=0; i<rs.fieldCount; i++) {
+								for (var i=0; i<rs.fieldCount(); i++) {
 									var fieldName = rs.fieldName(i);
 									item[fieldName] = rs.fieldByName(fieldName);
 								}
@@ -259,7 +261,11 @@ else if (TiWrap_verifyGears()) {
 		isWebStorage: false,
 		version: "TW_version",
 		isActive: false,
-		dbApi: ""
+		dbApi: "",
+		Platform: { },
+		API: { },
+		Extras: { },
+		TWExtras: { }
 	}
 }
 
