@@ -169,6 +169,22 @@ function searchDictionaryEnglish() {
 	return false;
 }
 
+function translateEnglishPhrase() {
+
+	var translationResult = document.getElementById('translationResult');
+	translationResult.innerHTML = '';
+
+	var englishText = document.getElementById('translateEnglish').value;
+	if (englishText=="") {
+		return;
+	}
+
+	var resultText = Tradui.Translation.getTranslation(englishText, 'en', 'ht');
+	translationResult.innerHTML = resultText;
+
+	return false;
+}
+
 function performUpdate() {
 	var html = "Data update from " + Tradui.Database.categoryDataUrl + 
 				" and " + Tradui.Database.phraseDataUrl + ".";
@@ -194,7 +210,6 @@ $(document).ready(function()
 	}
 
 	Tradui.initialize(initializeComplete, initializeFailure);
-
 });
 
 </script>
@@ -225,6 +240,16 @@ $(document).ready(function()
 
 	<div id="dictLookupCreole"></div>
 </div>
+
+<div style="margin: 25px; padding: 15px; border: 1px solid black;">
+	<form onsubmit="return false;">
+		<input name="translateEnglish" id="translateEnglish" value=""/>
+		<button onClick="translateEnglishPhrase();">Translate English</button>
+	</form>
+
+	<div id="translationResult"></div>
+</div>
+
 
 <div id="log"> </div>
 

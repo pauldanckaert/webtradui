@@ -48,8 +48,6 @@ var Tradui = {
 		Tradui.Database.Query.getTraduiStatus(initializeSuccess, initializeFailure);
 		
 	},
-
-
 	
 	Database: {
 	
@@ -64,74 +62,64 @@ var Tradui = {
 		
 		Schema: {
 			Drop: {
-				traduiStatusTable: 'drop table if exists Tradui_Status',
-				categoriesTable: 'drop table if exists Categories',
-				categoryTranslationsTable: 'drop table if exists Category_Translations',
-				phrasesTable: 'drop table if exists Phrases',
-				phraseTranslationsTable: 'drop table if exists Phrase_Translations',
-				dictionaryTable: 'drop table if exists Dictionary'
+				statements: [
+					'drop table if exists Tradui_Status ',
+					'drop table if exists Categories ',
+					'drop table if exists Category_Translations ',
+					'drop table if exists Phrases ',
+					'drop table if exists Phrase_Translations ',
+					'drop table if exists Dictionary ' 
+						]
 			},
 			Create: {
-				traduiStatusTable: 
+				statements: [
 					'create table Tradui_Status ( lastUpdated timestamp )',
-				categoriesTable: 'create table Categories (' +
-						'categoryId number, imgFile varchar(255))',
-				categoryTranslationsTable: 'create table Category_Translations (' +
-					'categoryId number, language varchar(32), title varchar(255), ' +
-					'audioFile varchar(255))',
-				phrasesTable: 'create table Phrases (' +
-					'categoryId number, phraseId number, imgFile varchar(255))',
-				phraseTranslationsTable: 'create table Phrase_Translations (' +
-					'phraseId number, language varchar(32), text varchar(255), ' +
-					'audioFile varchar(255))',
-				dictionaryTable: 'create table Dictionary ( sourceWord varchar(128), ' +
-					'destWord varchar(128), sourceLang varchar(32), destLang varchar(32))'
+					'create table Categories ( categoryId number, imgFile varchar(255) )',
+					'create table Category_Translations ( categoryId number, language varchar(32), ' +
+						'title varchar(255), audioFile varchar(255) )',
+					'create table Phrases ( categoryid number, phraseId number, imgFile varchar(255) )',
+					'create table Phrase_Translations ( phraseId number, language varchar(32), ' +
+						'text varchar(255), audioFile varchar(255) )',
+					'create table Dictionary ( sourceWord varchar(128), destWord varchar(128), ' +
+						'sourceLang varchar(32), destLang varchar(32) )'
+						]
 			},
 			Indexes: {
-				categoriesIdx: 'create index if not exists c_idx_001 on categories(categoryId);',
-				categoryTranslationsIdx: 'create index if not exists ct_idx_001 on category_translations(categoryId,language);',
-				phrasesIdx: 'create index if not exists p_idx_001 on phrases(phraseId);',
-				phrasesIdx2: 'create index if not exists p_idx_002 on phrases(phraseId, categoryId);',
-				phraseTranslationsIdx: 'create index if not exists pt_idx_001 on phrase_translations(phraseId,language);',
-				dictionaryIdx: 'create index if not exists d_idx_001 on dictionary(sourceWord, sourceLang)'
+				statements: [
+					'create index if not exists c_idx_001 on categories(categoryId)',
+					'create index if not exists ct_idx_001 on category_translations(categoryId,language)',
+					'create index if not exists p_idx_001 on phrases(phraseId)',
+					'create index if not exists p_idx_002 on phrases(phraseId, categoryId)',
+					'create index if not exists pt_idx_001 on phrase_translations(phraseId,language)',
+					'create index if not exists d_idx_001 on dictionary(sourceWord, sourceLang)'
+						]
 			}
 		},
 		
 		Management: {
 			initDb: function() {
-				db.execSql(Tradui.Database.Schema.Drop.traduiStatusTable);
-				db.execSql(Tradui.Database.Schema.Create.traduiStatusTable);
 
-				db.execSql(Tradui.Database.Schema.Drop.categoriesTable);
-				db.execSql(Tradui.Database.Schema.Drop.categoryTranslationsTable);
-				db.execSql(Tradui.Database.Schema.Drop.phrasesTable);
-				db.execSql(Tradui.Database.Schema.Drop.phraseTranslationsTable);
-				db.execSql(Tradui.Database.Schema.Drop.dictionaryTable);
+				for (var i=0; i<Tradui.Database.Schema.Drop.statements.length; i++) {
+					db.execSql(Tradui.Database.Schema.Drop.statements[i]);
+				}
 
-				db.execSql(Tradui.Database.Schema.Create.categoriesTable);
-				db.execSql(Tradui.Database.Schema.Create.categoryTranslationsTable);
-				db.execSql(Tradui.Database.Schema.Create.phrasesTable);
-				db.execSql(Tradui.Database.Schema.Create.phraseTranslationsTable);
-				db.execSql(Tradui.Database.Schema.Create.dictionaryTable);
+				for (var i=0; i<Tradui.Database.Schema.Create.statements.length; i++) {
+					db.execSql(Tradui.Database.Schema.Create.statements[i]);
+				}
 
-				db.execSql(Tradui.Database.Schema.Indexes.categoriesIdx);
-				db.execSql(Tradui.Database.Schema.Indexes.categoryTranslationsIdx);
-				db.execSql(Tradui.Database.Schema.Indexes.phrasesIdx);
-				db.execSql(Tradui.Database.Schema.Indexes.phrasesIdx2);
-				db.execSql(Tradui.Database.Schema.Indexes.phraseTranslationsIdx);
-				db.execSql(Tradui.Database.Schema.Indexes.dictionaryIdx);
+				for (var i=0; i<Tradui.Database.Schema.Indexes.statements.length; i++) {
+					db.execSql(Tradui.Database.Schema.Indexes.statements[i]);
+				}
 			
 				var timestamp = new Date();
 				db.execSql('insert into Tradui_Status values (?)', [ timestamp.getTime() ]);
 			},
 			
 			updateDatabase: function() {
-				db.execSql('BEGIN');
 				this.initDb();
 				this.loadCategories();
 				this.loadPhrases();
 				this.loadDictionary();
-				db.execSql('COMMIT');
 			},
 			
 			insertCategory: function(catId, catPic) {
@@ -305,7 +293,21 @@ var Tradui = {
 			}
 
 		}
+	}, 
+
+	Translation: {
+
+		baseUrl: 'http://api.microsofttranslator.com/V1/Http.svc/Translate?appId=',
+		appId: 'D22BA898FA9C62112AA0F10BCBF7F84BD1FAB2D3',
+
+		getTranslation: function(text, sourceLang, destLang) {
+			var transUrl = Tradui.Translation.baseUrl + Tradui.Translation.appId + 
+					'&from=' + sourceLang + '&to=' + destLang + '&text=' + text;
+			var transData = TiWrap.TWExtras.readFileContents(transUrl);
+			return transData;
+		}
 	}
+
 };
 	
 		
