@@ -248,6 +248,9 @@ else if (TiWrap_verifyGears()) {
 					'success': function(data){
 						TiWrap.API.debug('TiWrap readFileContents success');
 						fileString = data;
+					},
+					'error':function (XMLHttpRequest, textStatus, errorThrown) {
+						alert("Ajax request Failure: " + errorThrown);
 					}
 				});
 				return fileString;

@@ -179,8 +179,17 @@ function translateEnglishPhrase() {
 		return;
 	}
 
-	var resultText = Tradui.Translation.getTranslation(englishText, 'en', 'ht');
-	translationResult.innerHTML = resultText;
+	var successHandler = function(resultText) {
+		var translationResult = document.getElementById('translationResult');
+		translationResult.innerHTML = resultText;
+	};
+
+	var failureHandler = function(e) {
+		var translationResult = document.getElementById('translationResult');
+		translationResult.innerHTML = 'Unable to get translation at this time.';
+	};
+
+	Tradui.Translation.getTranslation(englishText, 'en', 'ht', successHandler, failureHandler);
 
 	return false;
 }
@@ -226,14 +235,14 @@ $(document).ready(function()
 </div>
 
 <div style="margin: 25px; padding: 15px; border: 1px solid black;">
-	<form onsubmit="return false;">
+	<form onsubmit="searchDictionaryEnglish(); return false;">
 		<input name="searchWordEnglish" id="searchWordEnglish" value=""/>
 		<button onClick="searchDictionaryEnglish();">Lookup English Word</button>
 	</form>
 
 	<div id="dictLookupEnglish"></div>
 
-	<form onsubmit="return false;">
+	<form onsubmit="searchDictionaryCreole(); return false;">
 		<input name="searchWordCreole" id="searchWordCreole" value=""/>
 		<button onClick="searchDictionaryCreole();">Lookup Creole Word</button>
 	</form>
@@ -242,9 +251,9 @@ $(document).ready(function()
 </div>
 
 <div style="margin: 25px; padding: 15px; border: 1px solid black;">
-	<form onsubmit="return false;">
+	<form onsubmit="translateEnglishPhrase(); return false;">
 		<input name="translateEnglish" id="translateEnglish" value=""/>
-		<button onClick="translateEnglishPhrase();">Translate English</button>
+		<input type="submit" value="Translate English"/>
 	</form>
 
 	<div id="translationResult"></div>

@@ -297,17 +297,48 @@ var Tradui = {
 
 	Translation: {
 
-		baseUrl: 'http://api.microsofttranslator.com/V1/Http.svc/Translate?appId=',
-		appId: 'D22BA898FA9C62112AA0F10BCBF7F84BD1FAB2D3',
+		callbackList: { },
+		baseUrl: 'http://pipes.yahoo.com/pipes/pipe.run?_id=',
+		pipeId: '405e0d8d6f8c3c5f3d7f7aaa360a5c3b',
 
-		getTranslation: function(text, sourceLang, destLang) {
-			var transUrl = Tradui.Translation.baseUrl + Tradui.Translation.appId + 
-					'&from=' + sourceLang + '&to=' + destLang + '&text=' + text;
-			var transData = TiWrap.TWExtras.readFileContents(transUrl);
-			return transData;
+		searchCompleted: function(response) {
+
+			var responseBase = response.value.items[0];
+			var source = responseBase.SearchResponse.Query.SearchTerms;
+			var result = responseBase.SearchResponse.Translation.Results[0].TranslatedTerm;
+			var callback = Tradui.Translation.callbackList[source];
+
+			if (callback) {
+				delete Tradui.Translation.callbackList[source];
+				callback(result);
+			} else {
+				alert("No Callback Found.");
+			}
+		},
+
+		getTranslation: function(text, sourceLang, destLang, success, failure) {
+
+			Tradui.Translation.callbackList[text] = success;
+
+			var transUrl = Tradui.Translation.baseUrl + 
+					Tradui.Translation.pipeId +
+					'&_render=json&_callback=Tradui.Translation.searchCompleted' +
+					'&sourceLang=' + sourceLang + 
+					'&destLang=' + destLang + 
+					'&text=' + text;
+
+			try {
+				$.ajax({
+   					type: "GET",
+   					url: transUrl,
+   					dataType: 'jsonp',
+					success: function(e, a) { alert("e:" + e); },
+					jsonp: 'Tradui.Translation.searchCompleted'
+ 				});
+			} catch (e) {
+				failure(e);
+			}
 		}
 	}
 
 };
-	
-		

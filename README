@@ -3,7 +3,7 @@ This is a test tree and supporting library for Tradui.
 
 This now works with Firefox/Google Gears, Safari 4, and Google Chrome.  The last two are supported via HTML5 Web Databases, while the first of course is via Gears.  The index file contained here provides a simple example of using the underlying library, but is not a critical component here.  Note that the library is now async for all operations with the database, using callbacks to provide values as needed.
 
-This also now has a Microsoft Translation API integration using an AppId for Tradui, and a library namespace for realtime translation support.
+This also now has a Microsoft Translation API integration using an AppId for Tradui, and a library namespace for realtime translation support.  This service has been wrapped with a YAHOO Pipe to protect the AppId from general use outside of translation calls.  The pipe currently returns the data in JSON though other formats are supported by YAHOO.  (http://pipes.yahoo.com/mstranslationapi)
 
 Please feel free to send requests for information and comments.
 
